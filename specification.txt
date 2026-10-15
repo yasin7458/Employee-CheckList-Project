@@ -1,0 +1,441 @@
+LEAVEPRO
+Employee Leave Management System
+React.js Practical Project Specification
+Build a responsive Employee Leave Management System where employees can view their leave balance, apply for leave and track leave history, while managers can review leave requests, approve/reject them, and manage employee/department information.
+1. Project Objective
+The objective is to evaluate a student's practical React.js skills through a realistic HR/leave-management workflow. The application should closely follow the supplied LeavePro UI reference image and should work with mock JSON/REST API data. Backend development is optional for a short practical assessment.
+Responsive desktop/mobile layout
+Role-based experience for Employee and Manager
+Leave application and approval workflow
+Leave balance calculation/display
+Search, filter and view leave requests
+Clean component-based React implementation
+2. User Roles & Permissions
+Role
+Main Responsibilities
+Employee
+Login, view dashboard, apply leave, view leave history, view leave balance, view own leave details and status.
+Manager
+Login, view dashboard, review leave requests, filter/search requests, view leave details, approve/reject requests, view employees/departments.
+3. Main Features
+Login / basic role handling
+Employee Dashboard
+Manager Leave Request List
+Apply Leave
+Leave History
+Leave Balance
+Leave Request Details
+Approve / Reject Leave
+Search and filter leave requests
+Department & Employee List (optional)
+Leave balance/status summary
+Success/error notifications
+Responsive layout
+4. Screen Flow
+Employee flow:
+Login → Employee Dashboard
+Dashboard → Apply Leave
+Dashboard → My Leave History
+Dashboard → Leave Balance
+Leave History → Leave Details
+Apply Leave → Submit → Success Notification → Leave History/Dashboard
+Manager flow:
+Login → Manager Dashboard / Leave Requests
+Leave Requests → Search / Filter
+Leave Requests → View Leave Details
+Leave Details → Approve / Reject
+Manager → Employees
+Manager → Departments
+5. Screen Requirements
+5.1 Login Page
+Email
+Password
+Login button
+Demo accounts / mock login
+Role-aware redirection after login
+5.2 Dashboard – Employee View
+Welcome message with employee name
+Total Leaves
+Used Leaves
+Remaining Leaves
+Pending Requests
+Leave Balance by type: Casual Leave (CL), Sick Leave (SL), Earned Leave (EL), Privilege Leave (PL)
+Recent Leave Requests table
+Quick Actions: Apply Leave, View Leave History
+Sidebar navigation and logout
+5.3 Apply Leave – Employee
+Leave Type – required
+Start Date – required
+End Date – required
+Reason – required
+Half Day – optional
+Reset button
+Apply Leave button
+Validate dates and required fields
+On successful submission: create leave request, set status to Pending, update request list and show success notification
+5.4 Leave List – Manager View
+Leave Requests table
+Employee
+Leave Type
+Date Range
+Status
+Action
+Search by employee name / leave type
+Filter by status
+View leave details
+Approve / Reject action
+Pagination or page navigation
+5.5 My Leave History – Employee
+Leave Type
+Start Date
+End Date
+Status
+Applied On
+Filter by leave type
+Filter by status
+View leave details
+Pagination / next-page control
+5.6 Leave Balance – Employee
+Current-year leave balance
+Casual Leave (CL): used / total
+Sick Leave (SL): used / total
+Earned Leave (EL): used / total
+Privilege Leave (PL): used / total
+Progress indicators
+Leave Balance Policy
+Information note explaining that balance updates after approval
+5.7 Leave Details – View
+Employee name / profile
+Leave Type
+Start Date
+End Date
+Total Days
+Reason
+Current Status
+Applied / updated information
+Approver information
+Manager actions: Approve / Reject
+Back navigation
+5.8 Department & Employee List – Optional
+Employee list
+Search employee
+Filter by department
+Employee name, department, email and status
+Add Employee button
+Department list
+Department employee count
+View department details
+6. Leave Business Rules
+Rule
+Expected Behaviour
+New leave request
+Status = Pending
+Manager approval
+Status = Approved; approved days are included in used leave balance
+Manager rejection
+Status = Rejected; leave balance is not deducted
+Pending request
+Should not be treated as used leave until approval
+Total days
+Calculated from Start Date and End Date; half-day may be represented as 0.5 day
+Required fields
+Leave Type, Start Date, End Date and Reason
+Date validation
+End Date should not be earlier than Start Date
+Employee history
+Employee can see their own requests
+Manager view
+Manager can see/manage employee leave requests
+7. Suggested Leave Types & Policy
+Leave Type
+Code
+Suggested Total / Year
+Casual Leave
+CL
+7
+Sick Leave
+SL
+5
+Earned Leave
+EL
+10
+Privilege Leave
+PL
+5
+The supplied UI reference shows these four leave types and the above sample balances/policy values. If a different company policy is intended, the values can be changed through the mock data/business rules.
+8. Suggested Database Structure
+8.1 users
+Field
+Type
+Description
+id
+int / string
+Primary key
+name
+varchar(100)
+Employee/manager name
+email
+varchar(150)
+Login/contact email
+password
+varchar
+Mock password / hashed password in real backend
+role
+varchar(20)
+employee / manager
+department_id
+int
+FK departments.id
+status
+varchar(20)
+active / inactive
+created_at
+datetime
+Created date
+8.2 departments
+Field
+Type
+Description
+id
+int
+Primary key
+name
+varchar(100)
+Department name
+status
+varchar(20)
+active / inactive
+created_at
+datetime
+Created date
+8.3 leave_types
+Field
+Type
+Description
+id
+int
+Primary key
+name
+varchar(50)
+Casual / Sick / Earned / Privilege
+code
+varchar(10)
+CL / SL / EL / PL
+annual_limit
+int
+Allowed days per year
+status
+varchar(20)
+active / inactive
+8.4 leave_requests
+Field
+Type
+Description
+id
+int
+Primary key
+employee_id
+int
+FK users.id
+leave_type_id
+int
+FK leave_types.id
+start_date
+date
+Leave start date
+end_date
+date
+Leave end date
+total_days
+decimal
+Calculated leave days
+reason
+text
+Employee reason
+status
+varchar(20)
+Pending / Approved / Rejected
+approved_by
+int
+FK users.id; manager
+created_at
+datetime
+Applied date
+updated_at
+datetime
+Last updated date
+10. REST API Design (Mock JSON Server / Backend)
+Suggested Base URL: http://localhost:5000/api
+Method
+Endpoint
+Purpose
+POST
+/auth/login
+Login user
+GET
+/users
+Get employees/managers
+GET
+/users/:id
+Get user details
+GET
+/departments
+Get departments
+GET
+/leave-types
+Get leave types and limits
+GET
+/leave-requests
+Get leave requests
+POST
+/leave-requests
+Create leave request
+GET
+/leave-requests/:id
+Get leave request details
+PUT
+/leave-requests/:id
+Update leave request
+PUT
+/leave-requests/:id/approve
+Approve leave request
+PUT
+/leave-requests/:id/reject
+Reject leave request
+GET
+/leave-balance/:employeeId
+Get employee leave balance
+GET
+/dashboard/stats/:employeeId
+Get employee dashboard statistics
+11. Recommended React Technology Stack
+Technology / Package
+Required?
+Use
+React.js
+YES
+Main frontend framework
+React Hooks
+YES
+useState, useEffect, useMemo etc.
+React Router
+YES
+Page navigation
+JavaScript ES6+
+YES
+Application/business logic
+Bootstrap / React-Bootstrap
+Recommended
+Responsive UI and components
+CSS
+YES
+Custom styling
+Axios
+Recommended
+API calls
+JSON Server / Mock API
+Recommended
+Mock REST API
+Redux Toolkit
+Optional
+Global user/request/filter state
+React Toastify
+Recommended
+Success/error notifications
+React Icons
+Recommended
+Sidebar/actions/UI icons
+Chart.js / Recharts
+Optional
+Dashboard visualizations
+LocalStorage
+Recommended
+Persist mock login/session
+Formik / React Hook Form
+Optional
+Form management
+Yup
+Optional
+Form validation
+12. Suggested Folder Structure
+src/├── components/│   ├── Sidebar.jsx│   ├── Header.jsx│   ├── LeaveCard.jsx│   ├── LeaveTable.jsx│   ├── StatusBadge.jsx│   ├── LeaveTypeBadge.jsx│   └── LeaveBalanceCard.jsx├── pages/│   ├── Login.jsx│   ├── EmployeeDashboard.jsx│   ├── ManagerDashboard.jsx│   ├── ApplyLeave.jsx│   ├── LeaveHistory.jsx│   ├── LeaveBalance.jsx│   ├── LeaveDetails.jsx│   ├── LeaveRequests.jsx│   ├── Employees.jsx│   └── Departments.jsx├── services/│   └── api.js├── hooks/│   └── useLeaves.js├── utils/│   ├── leaveUtils.js│   └── validation.js├── data/│   └── mockData.json├── App.jsx└── main.jsx
+13. Important React Functional Requirements
+Use reusable components instead of writing the same UI repeatedly.
+Use React Router for all major screens.
+Use state/effect hooks for API data and UI state.
+Use derived calculations for dashboard counts and leave balance.
+Use controlled form inputs or a form library.
+Show loading, empty and error states where appropriate.
+Use confirmation before destructive/rejection actions when needed.
+Keep API/service logic separate from UI components.
+Keep mock data structure close to the proposed database structure.
+14. Redux – When to Use
+Redux Toolkit is optional. It can be used for authenticated user information, leave request data, global filters and shared dashboard state. If the practical is intended to test basic React skills, useState/useEffect, Context where appropriate, and custom hooks are sufficient.
+15. Student Evaluation – 100 Marks
+Area
+Marks
+UI implementation from supplied Figma/image
+15
+React component structure
+10
+Routing and navigation
+10
+Apply Leave + validation
+15
+Search and filters
+10
+Leave details + approve/reject workflow
+15
+Leave balance calculations/display
+10
+API integration / Axios
+5
+Notifications / error handling
+5
+Code quality / responsive design
+5
+16. 3-Hour Practical Timeline
+Time
+Suggested Work
+0–20 min
+Project setup, routing, authentication and common layout
+20–50 min
+Employee dashboard + sidebar/header + summary cards
+50–85 min
+Apply Leave form + validation
+85–115 min
+Leave History + Leave Balance
+115–140 min
+Manager Leave Requests + search/filter
+140–160 min
+Leave Details + approve/reject
+160–170 min
+API/mock data integration and notifications
+170–180 min
+Testing, responsive fixes and final demo
+17. Demo Data / Credentials
+Role
+Email
+Password
+Manager
+manager@company.com
+123456
+Employee
+employee@company.com
+123456
+18. Expected Final Demo
+The student should demonstrate the complete workflow:
+Login as Employee
+Open Employee Dashboard and verify leave counts
+Open Apply Leave and submit a valid leave request
+Verify the new request appears as Pending
+Open Leave History and Leave Details
+Open Leave Balance and verify balance information
+Logout and login as Manager
+Open Leave Requests
+Search/filter the employee leave request
+Open Leave Details
+Approve or Reject the request
+Return to the request list and verify updated status
+Login/open Employee view and verify the resulting dashboard/history/balance state
+Demo Project Link : Link
